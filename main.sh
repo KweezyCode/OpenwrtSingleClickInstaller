@@ -16,6 +16,8 @@ eval "set -- $tmp"
   exit 1
 }
 
+exec < /dev/tty
+
 while :; do
   echo
   echo "Выберите программное обеспечение для установки:"
@@ -29,7 +31,7 @@ while :; do
   echo "  0) Выход"
 
   printf "Введите номер: "
-  read choice < /dev/tty
+  read choice
 
   case "$choice" in
     0)
@@ -57,7 +59,7 @@ while :; do
       pkg="$(basename "$script" .sh)"
       pkg="${pkg#install_}"
       printf "Установить %s? (y/n): " "$pkg"
-      read ans < /dev/tty
+      read ans
       case "$ans" in
         y|Y)
           [ -x "$script" ] || chmod +x "$script"
