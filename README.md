@@ -1,4 +1,3 @@
-Collecting workspace information```markdown
 # OpenWrt Single Click Installer
 
 Универсальный динамический инсталлятор дополнительных пакетов (ZeroTier, Zapret и другие) и автонастройкой для OpenWrt-роутеров.
