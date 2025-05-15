@@ -21,12 +21,14 @@ install_adguard_home() {
     uci set dhcp.@dnsmasq[0].expandhosts="1"
     uci set dhcp.@dnsmasq[0].cachesize="0"
     uci set dhcp.@dnsmasq[0].noresolv="1"
-    uci -q del_list dhcp.@dnsmasq[0].server
+    uci -q del_list dhcp.@dnsmasq[0].server || true
 
     # Удаляем старые опции DNS/DHCP
-    uci -q del dhcp.lan.dhcp_option
-    uci -q del dhcp.lan.dns
+    echo "Удаление старых опций DNS и DHCP..."
+    uci -q del dhcp.lan.dhcp_option || true
+    uci -q del dhcp.lan.dns || true
 
+    echo "Настройка DHCP опций..."
     # DHCP option 3: шлюз
     uci add_list dhcp.lan.dhcp_option="3,${NET_ADDR}"
     # DHCP option 6: DNS
