@@ -22,9 +22,7 @@ install_zapret() {
     APK_DIR="$TMP_DIR/apk"
     [ -d "$APK_DIR" ] || { echo "Каталог apk не найден"; exit 1; }
 
-    for pkg in "$APK_DIR"/*.apk; do
-      apk add --allow-untrusted "$pkg"
-    done
+    apk add --allow-untrusted "$APK_DIR"/*.apk
 
     rm -rf "$TMP_DIR"
     echo "Установка zapret завершена."
