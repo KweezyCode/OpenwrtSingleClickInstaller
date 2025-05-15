@@ -65,8 +65,10 @@ install_zerotier() {
     FIREWALL_ZONE_NAME="ZT_Firewall"
 
     # Добавляем зону, если она ещё не создана
-    firewall_zone_exist=$(uci show firewall 2>/dev/null | grep "config firewall 'zone'" | grep "$FIREWALL_ZONE_NAME")
-    if [ -z "$firewall_zone_exist" ]; then
+    if uci show firewall 2>/dev/null \
+        | grep -q "config firewall 'zone'.*${FIREWALL_ZONE_NAME}"; then
+        echo "Firewall зона \"$FIREWALL_ZONE_NAME\" уже существует."
+    else
         echo "Создание новой firewall зоны: $FIREWALL_ZONE_NAME"
         uci add firewall zone
         uci set firewall.@zone[-1].name="$FIREWALL_ZONE_NAME"
@@ -74,11 +76,8 @@ install_zerotier() {
         uci set firewall.@zone[-1].output='ACCEPT'
         uci set firewall.@zone[-1].forward='ACCEPT'
         uci set firewall.@zone[-1].masq='1'
-        
         echo "Добавляем интерфейс ZeroTier в зону $FIREWALL_ZONE_NAME"
         uci add_list firewall.@zone[-1].network='ZeroTier'
-    else
-        echo "Firewall зона \"$FIREWALL_ZONE_NAME\" уже существует."
     fi
 
     # Настраиваем правила переадресации для зоны zerotier
