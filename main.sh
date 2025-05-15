@@ -37,7 +37,7 @@ while :; do
       exit 0
       ;;
     ''|*[!0-9]*)
-      echo "Неверный ввод."
+      echo "Неверный ввод: $choice"
       continue
       ;;
     *)
