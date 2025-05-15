@@ -11,13 +11,8 @@
 
 1. Войдите в терминал роутера через SSH.
 
-2. Выполните следующую команду для установки и запуска инсталлятора:
+2. Выполните следующую команду для загрузки, распаковки и запуска инсталлятора:
 
 ```bash
-apk update \
-&& apk add --no-cache git-http \
-&& cd /tmp && git clone https://github.com/KweezyCode/OpenwrtSingleClickInstaller.git \
-&& cd OpenwrtSingleClickInstaller \
-&& chmod +x install.sh \
-&& ./install.sh
-```
+wget -qO- https://raw.githubusercontent.com/KweezyCode/OpenwrtSingleClickInstaller/main/install.sh | sh
+```  
