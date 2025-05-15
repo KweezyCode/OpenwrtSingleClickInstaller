@@ -81,17 +81,16 @@ install_zerotier() {
 
     # Настраиваем правила переадресации для зоны zerotier
     echo "Настройка переадресаций (firewall forwarding)..."
-    uci -q delete firewall.@forwarding[0] || true # Удаляем предыдущую конфигурацию, если она есть
 
     uci add firewall forwarding
-    uci set firewall.@forwarding[-1].src="$FIREWALL_ZONE_NAME"
+    uci set firewall.@forwarding[-1].src='ZT_Firewall'
     uci set firewall.@forwarding[-1].dest='lan'
     uci add firewall forwarding
-    uci set firewall.@forwarding[-1].src="$FIREWALL_ZONE_NAME"
+    uci set firewall.@forwarding[-1].src='ZT_Firewall
     uci set firewall.@forwarding[-1].dest='wan'
     uci add firewall forwarding
     uci set firewall.@forwarding[-1].src='lan'
-    uci set firewall.@forwarding[-1].dest="$FIREWALL_ZONE_NAME"
+    uci set firewall.@forwarding[-1].dest='ZT_Firewall
 
     uci commit firewall
 
