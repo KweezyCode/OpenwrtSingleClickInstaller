@@ -43,7 +43,7 @@ while :; do
     *)
       # Проверяем диапазон
       if [ "$choice" -lt 1 ] || [ "$choice" -gt "$#" ]; then
-        echo "Неверный выбор."
+        echo "$choice не является допустимым номером."
         continue
       fi
 
