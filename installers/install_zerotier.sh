@@ -62,7 +62,7 @@ install_zerotier() {
 
     # Настройка Firewall
     echo "Настройка firewall для ZeroTier..."
-    FIREWALL_ZONE_NAME="vpn"
+    FIREWALL_ZONE_NAME="zerotier"
 
     # Добавляем зону, если она ещё не создана
     firewall_zone_exist=$(uci show firewall 2>/dev/null | grep "config firewall 'zone'" | grep "$FIREWALL_ZONE_NAME")
@@ -80,9 +80,9 @@ install_zerotier() {
         echo "Firewall зона \"$FIREWALL_ZONE_NAME\" уже существует."
     fi
 
-    # Настраиваем правила переадресации для зоны vpn
+    # Настраиваем правила переадресации для зоны zerotier
     echo "Настройка переадресаций (firewall forwarding)..."
-    # Очистим уже существующие forwarding для зоны vpn, чтобы избежать дубликатов
+    # Очистим уже существующие forwarding для зоны zerotier, чтобы избежать дубликатов
     uci -q delete firewall.@forwarding[0]
 
     uci add firewall forwarding
