@@ -62,18 +62,20 @@ install_zerotier() {
 
     # Настройка Firewall
     echo "Настройка firewall для ZeroTier..."
-    FIREWALL_ZONE_NAME="zerotier"
+    FIREWALL_ZONE_NAME="ZT_Firewall"
 
     # Добавляем зону, если она ещё не создана
     firewall_zone_exist=$(uci show firewall 2>/dev/null | grep "config firewall 'zone'" | grep "$FIREWALL_ZONE_NAME")
     if [ -z "$firewall_zone_exist" ]; then
+        echo "Создание новой firewall зоны: $FIREWALL_ZONE_NAME"
         uci add firewall zone
-        uci set firewall.@zone[-1].name="ZT_Firewall"
+        uci set firewall.@zone[-1].name="$FIREWALL_ZONE_NAME"
         uci set firewall.@zone[-1].input='ACCEPT'
         uci set firewall.@zone[-1].output='ACCEPT'
         uci set firewall.@zone[-1].forward='ACCEPT'
         uci set firewall.@zone[-1].masq='1'
-        # Привязываем новый интерфейс к зоне
+        
+        echo "Добавляем интерфейс ZeroTier в зону $FIREWALL_ZONE_NAME"
         uci add_list firewall.@zone[-1].network='ZeroTier'
     else
         echo "Firewall зона \"$FIREWALL_ZONE_NAME\" уже существует."
@@ -82,15 +84,20 @@ install_zerotier() {
     # Настраиваем правила переадресации для зоны zerotier
     echo "Настройка переадресаций (firewall forwarding)..."
 
+    echo "$FIREWALL_ZONE_NAME -> lan"
     uci add firewall forwarding
-    uci set firewall.@forwarding[-1].src='ZT_Firewall'
+    uci set firewall.@forwarding[-1].src="$FIREWALL_ZONE_NAME"
     uci set firewall.@forwarding[-1].dest='lan'
-    uci add firewall forwarding
-    uci set firewall.@forwarding[-1].src='ZT_Firewall
-    uci set firewall.@forwarding[-1].dest='wan'
+
+    #echo "$FIREWALL_ZONE_NAME -> wan"
+    #uci add firewall forwarding
+    #uci set firewall.@forwarding[-1].src="$FIREWALL_ZONE_NAME"
+    #uci set firewall.@forwarding[-1].dest='wan'
+
+    echo "lan -> $FIREWALL_ZONE_NAME"
     uci add firewall forwarding
     uci set firewall.@forwarding[-1].src='lan'
-    uci set firewall.@forwarding[-1].dest='ZT_Firewall
+    uci set firewall.@forwarding[-1].dest="$FIREWALL_ZONE_NAME"
 
     uci commit firewall
 
