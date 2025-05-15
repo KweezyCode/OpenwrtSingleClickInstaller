@@ -54,7 +54,7 @@ install_zerotier() {
 
     # Настраиваем сетевой интерфейс в UCI
     echo "Настройка сетевого интерфейса ZeroTier..."
-    uci -q delete network.ZeroTier
+    uci -q delete network.ZeroTier || true # Удаляем предыдущую конфигурацию, если она есть
     uci set network.ZeroTier=interface
     uci set network.ZeroTier.proto='none'
     uci set network.ZeroTier.device="$DEVICE"
@@ -68,8 +68,7 @@ install_zerotier() {
     firewall_zone_exist=$(uci show firewall 2>/dev/null | grep "config firewall 'zone'" | grep "$FIREWALL_ZONE_NAME")
     if [ -z "$firewall_zone_exist" ]; then
         uci add firewall zone
-        zone_index=$(uci get firewall.@zone[-1].name 2>/dev/null)
-        uci set firewall.@zone[-1].name="$FIREWALL_ZONE_NAME"
+        uci set firewall.@zone[-1].name="ZT_Firewall"
         uci set firewall.@zone[-1].input='ACCEPT'
         uci set firewall.@zone[-1].output='ACCEPT'
         uci set firewall.@zone[-1].forward='ACCEPT'
@@ -82,8 +81,7 @@ install_zerotier() {
 
     # Настраиваем правила переадресации для зоны zerotier
     echo "Настройка переадресаций (firewall forwarding)..."
-    # Очистим уже существующие forwarding для зоны zerotier, чтобы избежать дубликатов
-    uci -q delete firewall.@forwarding[0]
+    uci -q delete firewall.@forwarding[0] || true # Удаляем предыдущую конфигурацию, если она есть
 
     uci add firewall forwarding
     uci set firewall.@forwarding[-1].src="$FIREWALL_ZONE_NAME"
