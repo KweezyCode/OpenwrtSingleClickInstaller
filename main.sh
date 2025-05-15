@@ -29,7 +29,7 @@ while :; do
   echo "  0) Выход"
 
   printf "Введите номер: "
-  read choice
+  read choice < /dev/tty
 
   case "$choice" in
     0)
@@ -57,7 +57,7 @@ while :; do
       pkg="$(basename "$script" .sh)"
       pkg="${pkg#install_}"
       printf "Установить %s? (y/n): " "$pkg"
-      read ans
+      read ans < /dev/tty
       case "$ans" in
         y|Y)
           [ -x "$script" ] || chmod +x "$script"
