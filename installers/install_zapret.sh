@@ -25,6 +25,8 @@ install_zapret() {
     apk add --allow-untrusted "$APK_DIR"/*.apk
 
     rm -rf "$TMP_DIR"
+
+    chmod -w /var/lib/zerotier-one/metrics.prom
     echo "Установка zapret завершена."
 }
 
